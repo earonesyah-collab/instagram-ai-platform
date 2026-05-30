@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Engagement AI Platform</title><link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head><body><header class="header"><div class="logo">
+    <h2> Instagram Engagement AI</h2>
+</div>
+
+<div class="header-actions">
+    <button id="themeBtn">
+         Dark / Light
+    </button>
+
+    <button id="exportBtn">
+         Export JSON
+    </button>
+
+    <button id="mcpBtn">
+         Connect MCP
+    </button>
+</div>
+
+</header><main class="container"><!-- INPUT PANEL -->
+
+<section class="card">
+
+    <h3>Input Data Instagram</h3>
+
+    <label>Followers</label>
+    <input
+        id="followers"
+        type="number"
+        min="0"
+        placeholder="Masukkan jumlah followers"
+    >
+
+    <label>Likes</label>
+    <input
+        id="likes"
+        type="number"
+        min="0"
+        placeholder="Jumlah likes"
+    >
+
+    <label>Comments</label>
+    <input
+        id="comments"
+        type="number"
+        min="0"
+        placeholder="Jumlah comments"
+    >
+
+    <label>Shares</label>
+    <input
+        id="shares"
+        type="number"
+        min="0"
+        placeholder="Jumlah shares"
+    >
+
+    <label>Saves</label>
+    <input
+        id="saves"
+        type="number"
+        min="0"
+        placeholder="Jumlah saves"
+    >
+
+    <label>Jenis Konten</label>
+
+    <select id="contentType">
+
+        <option value="Edukatif">
+            Edukatif
+        </option>
+
+        <option value="Tutorial">
+            Tutorial
+        </option>
+
+        <option value="Promosi">
+            Promosi
+        </option>
+
+        <option value="Hiburan">
+            Hiburan
+        </option>
+
+        <option value="Story Personal">
+            Story Personal
+        </option>
+
+        <option value="Motivasi">
+            Motivasi
+        </option>
+
+    </select>
+
+    <label>Caption</label>
+
+    <textarea
+        id="caption"
+        rows="4"
+        placeholder="Masukkan caption postingan..."
+    ></textarea>
+
+    <div class="upload-section">
+
+        <label>Upload CSV</label>
+
+        <input
+            id="csvFile"
+            type="file"
+            accept=".csv"
+        >
+
+        <label>Upload Excel</label>
+
+        <input
+            id="excelFile"
+            type="file"
+            accept=".xlsx,.xls"
+        >
+
+    </div>
+
+    <div class="button-group">
+
+        <button id="analyzeBtn">
+             Analisa AI
+        </button>
+
+        <button id="historyBtn">
+             Load History
+        </button>
+
+    </div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section class="card">
+
+    <h3>Dashboard Analytics</h3>
+
+    <div class="metric">
+
+        <span>Engagement Rate</span>
+
+        <div
+            class="metric-value"
+            id="er"
+        >
+            0%
+        </div>
+
+    </div>
+
+    <div class="metric">
+
+        <span>Prediksi AI</span>
+
+        <div
+            class="metric-value"
+            id="prediction"
+        >
+            0%
+        </div>
+
+    </div>
+
+    <div class="metric">
+
+        <span>Total Engagement</span>
+
+        <div
+            class="metric-value"
+            id="totalEngagement"
+        >
+            0
+        </div>
+
+    </div>
+
+    <div class="metric">
+
+        <span>Status</span>
+
+        <div
+            class="metric-value"
+            id="status"
+        >
+            -
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CHART -->
+
+<section class="card chart-card">
+
+    <h3>Trend Engagement</h3>
+
+    <canvas id="engagementChart"></canvas>
+
+</section>
+
+<!-- CSV PREVIEW -->
+
+<section class="card">
+
+    <h3>Preview Data Upload</h3>
+
+    <div
+        id="previewTable"
+        class="preview-table"
+    >
+        Belum ada data.
+    </div>
+
+</section>
+
+<!-- HISTORY -->
+
+<section class="card">
+
+    <h3>Riwayat Analisis</h3>
+
+    <div id="historyContainer">
+
+        Belum ada data.
+
+    </div>
+
+</section>
+
+</main><footer class="footer"><p>
+    Instagram Engagement AI Platform
+    • Firebase • CSV • Analytics
+</p>
+
+</footer><script src="app.js"></script></body>
+</html>
