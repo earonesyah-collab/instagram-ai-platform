@@ -36,3 +36,45 @@ document.getElementById("tiktokBtn").addEventListener("click", async () => {
     alert("❌ Gagal mengambil data TikTok. Cek Worker/API");
   }
 });
+
+function generateEvaluation(data) {
+  const followers = Number(data.followers || 0);
+  const total =
+    Number(data.likes || 0) +
+    Number(data.comments || 0) +
+    Number(data.shares || 0) +
+    Number(data.saves || 0);
+
+  const er = followers ? (total / followers) * 100 : 0;
+
+  let status = "";
+  let recommendation = "";
+
+  // =========================
+  // LOGIC EVALUATION
+  // =========================
+  if (er >= 10) {
+    status = "🔥 VIRAL / HIGH PERFORMANCE";
+    recommendation =
+      "Konten kamu sangat bagus. Pertahankan format video, gunakan trend audio, dan posting konsisten 1-2x sehari.";
+  } else if (er >= 5) {
+    status = "📈 GOOD PERFORMANCE";
+    recommendation =
+      "Engagement cukup baik. Tingkatkan hook di 3 detik pertama dan gunakan hashtag niche lebih spesifik.";
+  } else if (er >= 2) {
+    status = "⚠️ AVERAGE";
+    recommendation =
+      "Konten perlu ditingkatkan. Fokus pada storytelling, caption yang lebih menarik, dan konsistensi posting.";
+  } else {
+    status = "❌ LOW PERFORMANCE";
+    recommendation =
+      "Engagement rendah. Perbaiki kualitas video, gunakan tren TikTok, dan optimasi jam upload.";
+  }
+
+  return {
+    engagementRate: er.toFixed(2),
+    status,
+    recommendation,
+    totalEngagement: total
+  };
+}
