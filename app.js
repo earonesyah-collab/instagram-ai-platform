@@ -136,14 +136,25 @@ er > 10
 });
 
 saveHistory({
-er,
-prediction,
-total,
-date:
-new Date().toISOString()
+    er,
+    prediction,
+    total,
+    date:
+    new Date().toISOString()
+});
+
+generateAnalysis({
+    followers: f,
+    likes: l,
+    comments: c,
+    shares: sh,
+    saves: sv,
+    contentType: contentType.value,
+    caption: caption.value
 });
 
 }
+
 
 /* DASHBOARD */
 
@@ -361,6 +372,110 @@ statusEl.innerText =
 }
 
 /* CSV */
+
+function generateAnalysis(data){
+
+    const {
+        followers,
+        likes,
+        comments,
+        shares,
+        saves,
+        contentType,
+        caption
+    } = data;
+
+    const total =
+        likes + comments + shares + saves;
+
+    const er =
+        (total / followers) * 100;
+
+    let score = 0;
+
+    // Engagement Rate
+    if(er > 10) score += 40;
+    else if(er > 5) score += 30;
+    else if(er > 2) score += 20;
+    else score += 10;
+
+    // Saves
+    if(saves > likes * 0.2) score += 20;
+
+    // Shares
+    if(shares > likes * 0.15) score += 20;
+
+    // Comments
+    if(comments > likes * 0.05) score += 10;
+
+    // Caption
+    if(caption.length > 80) score += 10;
+
+    let analysis = "";
+    let recommendation = "";
+
+    if(score >= 80){
+
+        analysis =
+        "Konten memiliki potensi viral tinggi. Audiens tidak hanya memberi like tetapi juga menyimpan dan membagikan konten.";
+
+        recommendation =
+        "Replikasi format konten ini dan buat seri lanjutan dengan topik serupa.";
+
+    }else if(score >= 60){
+
+        analysis =
+        "Konten berkinerja baik dan menghasilkan interaksi yang sehat.";
+
+        recommendation =
+        "Tingkatkan CTA pada caption untuk mendorong lebih banyak komentar dan share.";
+
+    }else if(score >= 40){
+
+        analysis =
+        "Konten mendapatkan perhatian tetapi belum cukup kuat untuk mendorong distribusi organik.";
+
+        recommendation =
+        "Fokus pada hook 3 detik pertama dan gunakan format Reel.";
+
+    }else{
+
+        analysis =
+        "Konten kurang menarik bagi audiens dan berpotensi memiliki jangkauan rendah.";
+
+        recommendation =
+        "Ubah konsep konten, optimalkan thumbnail, caption, dan waktu posting.";
+    }
+
+    // rekomendasi spesifik
+    if(contentType === "Tutorial"){
+        recommendation +=
+        "<br>• Tutorial singkat 15-30 detik biasanya memiliki retention lebih tinggi.";
+    }
+
+    if(contentType === "Edukatif"){
+        recommendation +=
+        "<br>• Tambahkan poin carousel agar jumlah save meningkat.";
+    }
+
+    if(contentType === "Promosi"){
+        recommendation +=
+        "<br>• Kurangi hard selling dan tambahkan storytelling.";
+    }
+
+    if(contentType === "Hiburan"){
+        recommendation +=
+        "<br>• Gunakan audio tren untuk meningkatkan discoverability.";
+    }
+
+    document.getElementById("analysisResult")
+        .innerHTML = analysis;
+
+    document.getElementById("recommendationResult")
+        .innerHTML = recommendation;
+
+    return score;
+}
 
 function handleCSV(event) {
 
