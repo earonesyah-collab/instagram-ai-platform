@@ -7,13 +7,18 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head><body><header class="header"><div class="logo">
-    <h2> Instagram Engagement DPMPTSP </h2>
+    <h2> Instagram Engagement AI</h2>
 </div>
 
 <div class="header-actions">
     <button id="themeBtn">
          Dark / Light
     </button>
+
+<button id="tiktokBtn">📱 Load TikTok Data</button>
+<canvas id="engagementChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
 
     <button id="exportBtn">
          Export JSON
@@ -267,5 +272,30 @@
     • Irwan
 </p>
 
-</footer><script src="app.js"></script></body>
+
+</footer><script src="app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("engagementChart");
+
+  if (!canvas) {
+    console.warn("⚠️ Chart canvas tidak ditemukan");
+    return;
+  }
+
+  console.log("✅ UI Ready - Dashboard loaded");
+});
+</script>
+
+<script>
+window.onload = () => {
+  if (!document.getElementById("engagementChart")) {
+    alert("Chart canvas missing!");
+  }
+};
+</script>
+
+</body>
+
 </html>
