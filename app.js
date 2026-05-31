@@ -1,115 +1,60 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://cool-cell-c8d3.ear-one-syah.workers.dev";
 
 let chart = null;
 
 let historyData =
 JSON.parse(
-localStorage.getItem(
-"engagement_history"
-) || "[]"
+localStorage.getItem("engagement_history") || "[]"
 );
 
 /* ELEMENTS */
 
-const followers =
-document.getElementById("followers");
+const followers = document.getElementById("followers");
+const likes = document.getElementById("likes");
+const comments = document.getElementById("comments");
+const shares = document.getElementById("shares");
+const saves = document.getElementById("saves");
+const caption = document.getElementById("caption");
+const contentType = document.getElementById("contentType");
 
-const likes =
-document.getElementById("likes");
-
-const comments =
-document.getElementById("comments");
-
-const shares =
-document.getElementById("shares");
-
-const saves =
-document.getElementById("saves");
-
-const caption =
-document.getElementById("caption");
-
-const contentType =
-document.getElementById("contentType");
-
-const erEl =
-document.getElementById("er");
-
-const predictionEl =
-document.getElementById("prediction");
-
-const totalEl =
-document.getElementById("totalEngagement");
-
-const statusEl =
-document.getElementById("status");
+const erEl = document.getElementById("er");
+const predictionEl = document.getElementById("prediction");
+const totalEl = document.getElementById("totalEngagement");
+const statusEl = document.getElementById("status");
 
 const historyContainer =
-document.getElementById(
-"historyContainer"
-);
+document.getElementById("historyContainer");
 
 const previewTable =
-document.getElementById(
-"previewTable"
-);
+document.getElementById("previewTable");
 
 /* BUTTONS */
 
-document
-.getElementById("themeBtn")
-.addEventListener(
-"click",
-toggleTheme
-);
+document.getElementById("themeBtn")
+.addEventListener("click", toggleTheme);
 
-document
-.getElementById("analyzeBtn")
-.addEventListener(
-"click",
-analyzeLocal
-);
+document.getElementById("analyzeBtn")
+.addEventListener("click", analyzeLocal);
 
-document
-.getElementById("mcpBtn")
-.addEventListener(
-"click",
-connectMCP
-);
+document.getElementById("historyBtn")
+.addEventListener("click", renderHistory);
 
-document
-.getElementById("historyBtn")
-.addEventListener(
-"click",
-loadHistory
-);
+document.getElementById("exportBtn")
+.addEventListener("click", exportJSON);
 
-document
-.getElementById("exportBtn")
-.addEventListener(
-"click",
-exportJSON
-);
+document.getElementById("csvFile")
+.addEventListener("change", handleCSV);
 
-document
-.getElementById("csvFile")
-.addEventListener(
-"change",
-handleCSV
-);
+document.getElementById("mcpBtn")
+.addEventListener("click", connectAPI);
 
 /* THEME */
 
-function toggleTheme(){
-
-document.body
-.classList.toggle(
-    "light"
-);
-
+function toggleTheme() {
+document.body.classList.toggle("light");
 }
 
-/* ENGAGEMENT */
+/* CALCULATION */
 
 function calculateER(
 followers,
@@ -117,149 +62,104 @@ likes,
 comments,
 shares,
 saves
-){
+) {
 
-if(
-    followers <= 0
-){
-    return 0;
-}
+if (followers <= 0) return 0;
 
 const total =
-    likes +
-    comments +
-    shares +
-    saves;
+likes +
+comments +
+shares +
+saves;
 
-return (
-    total /
-    followers
-) * 100;
+return (total / followers) * 100;
 
 }
 
 function predictEngagement(
 er,
 total
-){
+) {
 
 return Number(
-
-    (
-        er * 0.8 +
-
-        Math.log10(
-            total + 1
-        ) * 5
-
-    ).toFixed(2)
-
+(
+er * 0.8 +
+Math.log10(total + 1) * 5
+).toFixed(2)
 );
 
 }
 
-/* LOCAL ANALYSIS */
+/* ANALYSIS */
 
-function analyzeLocal(){
+function analyzeLocal() {
 
-const f =
-    Number(
-        followers.value
-    ) || 0;
+const f = Number(followers.value) || 0;
+const l = Number(likes.value) || 0;
+const c = Number(comments.value) || 0;
+const sh = Number(shares.value) || 0;
+const sv = Number(saves.value) || 0;
 
-const l =
-    Number(
-        likes.value
-    ) || 0;
-
-const c =
-    Number(
-        comments.value
-    ) || 0;
-
-const sh =
-    Number(
-        shares.value
-    ) || 0;
-
-const sv =
-    Number(
-        saves.value
-    ) || 0;
-
-if(f <= 0){
-
-    alert(
-        "Followers harus lebih dari 0"
-    );
-
-    return;
+if (f <= 0) {
+alert("Followers harus lebih dari 0");
+return;
 }
 
 const total =
-    l + c + sh + sv;
+l + c + sh + sv;
 
 const er =
-    calculateER(
-        f,
-        l,
-        c,
-        sh,
-        sv
-    );
+calculateER(
+f,
+l,
+c,
+sh,
+sv
+);
 
 const prediction =
-    predictEngagement(
-        er,
-        total
-    );
+predictEngagement(
+er,
+total
+);
 
 updateDashboard({
-    er,
-    prediction,
-    total,
-    status:
-        er > 10
-        ? "🔥 VIRAL"
-        : er > 5
-        ? "⚡ MEDIUM"
-        : "📉 LOW"
+er,
+prediction,
+total,
+status:
+er > 10
+? "🔥 VIRAL"
+: er > 5
+? "⚡ MEDIUM"
+: "📉 LOW"
 });
 
-saveLocalHistory({
-    er,
-    prediction,
-    total,
-    date:
-    new Date()
-    .toISOString()
+saveHistory({
+er,
+prediction,
+total,
+date:
+new Date().toISOString()
 });
 
 }
 
-/* UPDATE UI */
+/* DASHBOARD */
 
-function updateDashboard(
-data
-){
+function updateDashboard(data) {
 
 erEl.innerText =
-    Number(
-        data.er
-    ).toFixed(2)
-    + "%";
+Number(data.er).toFixed(2) + "%";
 
 predictionEl.innerText =
-    Number(
-        data.prediction
-    ).toFixed(2)
-    + "%";
+Number(data.prediction).toFixed(2) + "%";
 
 totalEl.innerText =
-    data.total;
+data.total;
 
 statusEl.innerText =
-    data.status;
+data.status;
 
 updateChart();
 
@@ -267,156 +167,124 @@ updateChart();
 
 /* CHART */
 
-function updateChart(){
+function updateChart() {
 
 const canvas =
 document.getElementById(
-    "engagementChart"
+"engagementChart"
 );
+
+if (!canvas) return;
 
 const ctx =
 canvas.getContext("2d");
 
-if(chart){
-    chart.destroy();
+if (chart) {
+chart.destroy();
 }
 
-chart =
-new Chart(ctx,{
+chart = new Chart(ctx, {
 
-    type:"line",
+type: "line",
 
-    data:{
+data: {
 
-        labels:
-        historyData.map(
-            (_,i)=>
-            i+1
-        ),
+labels:
+historyData.map(
+(_, i) => i + 1
+),
 
-        datasets:[{
+datasets: [{
 
-            label:
-            "Engagement Rate",
+label:
+"Engagement Rate",
 
-            data:
-            historyData.map(
-                h=>h.er
-            )
+data:
+historyData.map(
+h => h.er
+)
 
-        }]
+}]
 
-    },
+},
 
-    options:{
-        responsive:true
-    }
+options: {
+responsive: true
+}
 
 });
 
 }
 
-/* SAVE HISTORY */
+/* HISTORY */
 
-function saveLocalHistory(
-item
-){
+function saveHistory(item) {
 
-historyData.push(
-    item
-);
+historyData.push(item);
 
 localStorage.setItem(
-
-    "engagement_history",
-
-    JSON.stringify(
-        historyData
-    )
-
+"engagement_history",
+JSON.stringify(historyData)
 );
 
 renderHistory();
 
 }
 
-/* RENDER HISTORY */
+function renderHistory() {
 
-function renderHistory(){
+if (!historyData.length) {
 
-if(
-    historyData.length === 0
-){
+historyContainer.innerHTML =
+"Belum ada data";
 
-    historyContainer
-    .innerHTML =
-    "Belum ada data";
+return;
 
-    return;
 }
 
-historyContainer
-.innerHTML =
+historyContainer.innerHTML =
 historyData
 .slice()
 .reverse()
-.map(item=>`
+.map(item => `
 
-    <div class="history-item">
+<div class="history-item"><strong>
+ER:
+${item.er.toFixed(2)}%
+</strong><br>Prediction:
+${item.prediction.toFixed(2)}%
 
-        <strong>
-        ER:
-        ${item.er.toFixed(2)}%
-        </strong>
+<br>Total:
+${item.total}
 
-        <br>
-
-        Prediction:
-        ${item.prediction.toFixed(2)}%
-
-        <br>
-
-        Total:
-        ${item.total}
-
-    </div>
-
-`)
+</div>`)
 .join("");
 
 }
 
 /* EXPORT */
 
-function exportJSON(){
+function exportJSON() {
 
-const blob =
-new Blob(
-
-    [
-        JSON.stringify(
-            historyData,
-            null,
-            2
-        )
-    ],
-
-    {
-        type:
-        "application/json"
-    }
-
+const blob = new Blob(
+[
+JSON.stringify(
+historyData,
+null,
+2
+)
+],
+{
+type:
+"application/json"
+}
 );
 
 const a =
-document.createElement(
-    "a"
-);
+document.createElement("a");
 
 a.href =
-URL.createObjectURL(
-    blob
-);
+URL.createObjectURL(blob);
 
 a.download =
 "engagement-history.json";
@@ -425,192 +293,119 @@ a.click();
 
 }
 
-/* MCP */
+/* CLOUDLFARE API */
 
-async function connectMCP(){
+async function connectAPI() {
 
-try{
+try {
 
-    const response =
-    await fetch(
+statusEl.innerText =
+"Connecting...";
 
-        API_URL +
-        "/mcp",
+const response =
+await fetch(
+API_URL + "/api/analytics"
+);
 
-        {
+const data =
+await response.json();
 
-            method:"POST",
+updateDashboard({
 
-            headers:{
-                "Content-Type":
-                "application/json"
-            },
+er:
+data.engagement_rate || 0,
 
-            body:JSON.stringify({
+prediction:
+data.prediction || 0,
 
-                followers:
-                Number(
-                    followers.value
-                ),
+total:
+data.total_engagement || 0,
 
-                likes:
-                Number(
-                    likes.value
-                ),
+status:
+data.status || "Online"
 
-                comments:
-                Number(
-                    comments.value
-                ),
-
-                shares:
-                Number(
-                    shares.value
-                ),
-
-                saves:
-                Number(
-                    saves.value
-                ),
-
-                caption:
-                caption.value,
-
-                contentType:
-                contentType.value
-
-            })
-
-        }
-
-    );
-
-    const data =
-    await response.json();
-
-    updateDashboard({
-
-        er:
-        data.engagement_rate,
-
-        prediction:
-        data.prediction,
-
-        total:
-        data.total_engagement,
-
-        status:
-        data.status
-
-    });
+});
 
 }
-catch(err){
+catch (err) {
 
-    alert(
-        "Backend tidak terhubung"
-    );
+console.error(err);
 
-    console.error(
-        err
-    );
+statusEl.innerText =
+"🔴 Offline";
 
 }
 
 }
 
-/* LOAD HISTORY */
+async function checkBackend() {
 
-async function loadHistory(){
+try {
 
-try{
+const response =
+await fetch(API_URL);
 
-    const response =
-    await fetch(
-        API_URL +
-        "/history"
-    );
+await response.json();
 
-    const data =
-    await response.json();
-
-    console.log(
-        data
-    );
+statusEl.innerText =
+"🟢 Online";
 
 }
-catch(err){
+catch {
 
-    console.error(
-        err
-    );
+statusEl.innerText =
+"🔴 Offline";
+
 }
 
 }
 
 /* CSV */
 
-function handleCSV(
-event
-){
+function handleCSV(event) {
 
 const file =
 event.target.files[0];
 
-if(!file)
-    return;
+if (!file) return;
 
 const reader =
 new FileReader();
 
 reader.onload =
-function(e){
+function(e) {
 
-    const text =
-    e.target.result;
+const rows =
+e.target.result
+.split("\n");
 
-    const rows =
-    text.split(
-        "\n"
-    );
+let html =
+"<table>";
 
-    let html =
-    "<table>";
+rows.forEach(row => {
 
-    rows.forEach(
-    row=>{
+html += "<tr>";
 
-        html +=
-        "<tr>";
+row.split(",")
+.forEach(col => {
 
-        row
-        .split(",")
+html +=
+"<td>${col}</td>";
 
-        .forEach(
-        col=>{
+});
 
-            html +=
-            `<td>${col}</td>`;
+html += "</tr>";
 
-        });
+});
 
-        html +=
-        "</tr>";
+html += "</table>";
 
-    });
-
-    html +=
-    "</table>";
-
-    previewTable
-    .innerHTML =
-    html;
+previewTable.innerHTML =
+html;
 
 };
 
-reader.readAsText(
-    file
-);
+reader.readAsText(file);
 
 }
 
@@ -619,3 +414,10 @@ reader.readAsText(
 renderHistory();
 
 updateChart();
+
+checkBackend();
+
+setInterval(
+checkBackend,
+10000
+);
