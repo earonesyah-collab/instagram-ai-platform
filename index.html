@@ -6,19 +6,22 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-</head><body><header class="header"><div class="logo">
+</head><body>
+<header class="header">
+
+<div class="logo">
     <h2> Instagram Engagement AI</h2>
 </div>
 
 <div class="header-actions">
+
     <button id="themeBtn">
          Dark / Light
     </button>
 
-<button id="tiktokBtn"> Load TikTok Data</button>
-<canvas id="engagementChart"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="app.js"></script>
+    <button id="tiktokBtn">
+         Load TikTok Data
+    </button>
 
     <button id="exportBtn">
          Export JSON
@@ -27,9 +30,12 @@
     <button id="mcpBtn">
          Connect MCP
     </button>
+
 </div>
 
-</header><main class="container"><!-- INPUT PANEL -->
+</header>
+
+<main class="container"><!-- INPUT PANEL -->
 
 <section class="card">
 
@@ -113,38 +119,30 @@
         placeholder="Masukkan caption postingan..."
     ></textarea>
 
-    <div class="upload-section">
+<div class="upload-section">
 
-        <label>Upload CSV</label>
+    <label>Upload CSV Instagram</label>
+    <input id="csvFile" type="file" accept=".csv">
 
-        <input
-            id="csvFile"
-            type="file"
-            accept=".csv"
-        >
+    <label>Upload Excel Instagram</label>
+    <input id="excelFile" type="file" accept=".xlsx,.xls">
 
-        <label>Upload Excel</label>
+    <label>Upload TikTok Analytics CSV</label>
+    <input id="tiktokFile" type="file" accept=".csv">
 
-        <input
-            id="excelFile"
-            type="file"
-            accept=".xlsx,.xls"
-        >
+</div>
 
-    </div>
+<div class="button-group">
 
-    <div class="button-group">
+    <button id="analyzeBtn">
+         Analisa AI
+    </button>
 
-        <button id="analyzeBtn">
-             Analisa AI
-        </button>
+    <button id="historyBtn">
+         Load History
+    </button>
 
-        <button id="historyBtn">
-             Load History
-        </button>
-
-    </div>
-
+</div>
 </section>
 
 <!-- DASHBOARD -->
@@ -309,13 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<script>
-window.onload = () => {
-  if (!document.getElementById("engagementChart")) {
-    alert("Chart canvas missing!");
-  }
-};
-</script>
+
 
 </body>
 
