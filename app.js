@@ -870,3 +870,117 @@ document.addEventListener(
 
 }
 );
+
+document.getElementById("analyzeBtn").addEventListener("click", () => {
+
+    const followers = Number(
+        document.getElementById("followers").value
+    );
+
+    const likes = Number(
+        document.getElementById("likes").value
+    );
+
+    const comments = Number(
+        document.getElementById("comments").value
+    );
+
+    const shares = Number(
+        document.getElementById("shares").value
+    );
+
+    const saves = Number(
+        document.getElementById("saves").value
+    );
+
+    const contentType =
+        document.getElementById("contentType").value;
+
+    if (followers <= 0) {
+        alert("Masukkan jumlah followers");
+        return;
+    }
+
+    const totalEngagement =
+        likes +
+        comments +
+        shares +
+        saves;
+
+    const er =
+        (totalEngagement / followers) * 100;
+
+    let prediction = er;
+
+    if (contentType === "Tutorial")
+        prediction *= 1.15;
+
+    if (contentType === "Edukatif")
+        prediction *= 1.10;
+
+    if (contentType === "Motivasi")
+        prediction *= 1.05;
+
+    if (contentType === "Promosi")
+        prediction *= 0.90;
+
+    prediction = prediction.toFixed(2);
+
+    let status = "";
+
+    if (er < 1)
+        status = "Kurang";
+
+    else if (er < 3)
+        status = "Cukup";
+
+    else if (er < 6)
+        status = "Bagus";
+
+    else
+        status = "Viral";
+
+    document.getElementById("er").textContent =
+        er.toFixed(2) + "%";
+
+    document.getElementById("prediction").textContent =
+        prediction + "%";
+
+    document.getElementById("totalEngagement").textContent =
+        totalEngagement;
+
+    document.getElementById("status").textContent =
+        status;
+
+    document.getElementById("analysisResult").innerHTML = `
+        <b>Analisa AI:</b><br>
+        Total engagement: ${totalEngagement}<br>
+        Engagement Rate: ${er.toFixed(2)}%<br>
+        Jenis konten: ${contentType}<br>
+        Status performa: ${status}
+    `;
+
+    let recommendation = "";
+
+    if (er < 1) {
+        recommendation =
+        "Perbanyak Reels, gunakan hashtag relevan, dan posting pada jam aktif.";
+    }
+    else if (er < 3) {
+        recommendation =
+        "Tambahkan CTA pada caption dan tingkatkan kualitas visual.";
+    }
+    else if (er < 6) {
+        recommendation =
+        "Performa bagus. Pertahankan pola konten saat ini.";
+    }
+    else {
+        recommendation =
+        "Konten sangat kuat. Pertimbangkan boosting atau iklan untuk menjangkau audiens lebih luas.";
+    }
+
+    document.getElementById(
+        "recommendationResult"
+    ).textContent = recommendation;
+
+});
